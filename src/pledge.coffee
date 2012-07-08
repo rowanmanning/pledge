@@ -25,36 +25,100 @@ exports.util =
   # ------------
   #
   type:
+    
+    #>
+    # Check whether an object is an array.
+    #
     isArray: Array.isArray || (obj) ->
       exports.util.cast.toString(obj) is '[object Array]'
+    
+    #>
+    # Check whether an object is a boolean.
+    #
     isBoolean: (obj) ->
       typeof obj is 'boolean'
+    
+    #>
+    # Check whether an object is a function.
+    #
     isFunction: (obj) ->
       exports.util.cast.toString(obj) is '[object Function]'
+    
+    #>
+    # Check whether an object is null.
+    #
     isNull: (obj) ->
       obj is null
+    
+    #>
+    # Check whether an object is a number.
+    #
     isNumber: (obj) ->
       typeof obj is 'number'
+    
+    #>
+    # Check whether an object is an object.
+    #
     isObject: (obj) ->
       obj is Object(obj)
+    
+    #>
+    # Check whether an object is a string.
+    #
     isString: (obj) ->
       typeof obj is 'string'
+    
+    #>
+    # Check whether an object is undefined.
+    #
     isUndefined: (obj) ->
       typeof obj is 'undefined'
+    
+    #>
+    # Check whether an object is a non-array.
+    #
     isNotArray: (obj) ->
       not exports.util.type.isArray obj
+    
+    #>
+    # Check whether an object is a non-boolean.
+    #
     isNotBoolean: (obj) ->
       not exports.util.type.isBoolean obj
+    
+    #>
+    # Check whether an object is a non-function.
+    #
     isNotFunction: (obj) ->
       not exports.util.type.isFunction obj
+    
+    #>
+    # Check whether an object is non-null.
+    #
     isNotNull: (obj) ->
       not exports.util.type.isNull obj
+    
+    #>
+    # Check whether an object is a non-number.
+    #
     isNotNumber: (obj) ->
       not exports.util.type.isNumber obj
+    
+    #>
+    # Check whether an object is a non-object.
+    #
     isNotObject: (obj) ->
       not exports.util.type.isObject obj
+    
+    #>
+    # Check whether an object is a non-string.
+    #
     isNotString: (obj) ->
       not exports.util.type.isString obj
+    
+    #>
+    # Check whether an object is defined.
+    #
     isDefined: (obj) ->
       not exports.util.type.isUndefined obj
 
