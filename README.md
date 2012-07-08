@@ -11,7 +11,11 @@ validating variables and arguments an enjoyable task!
 
 ## Installation ##
 
-Just install with `npm install er` or add it to your
+**Browser**  
+Todo...
+
+**Server (Node.js):**  
+Just install with `npm install pledge` or add it to your
 `package.json`.
 
 
