@@ -41,6 +41,8 @@ following commands:
 
 `jake build`: Build JavaScript from the CoffeeScript source.
 
+`jake functional`: Run all functional tests.
+
 `jake test`: Run all unit tests.
 
 
