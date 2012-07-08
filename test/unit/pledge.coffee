@@ -3,8 +3,8 @@
 {assert} = require 'chai'
 sinon = require 'sinon'
 
-# Assertion methods
-assertionMethods = [
+# Type assertion methods
+typeAssertionMethods = [
   'isArray'
   'isBoolean'
   'isFunction'
@@ -66,7 +66,7 @@ suite 'pledge module', ->
       assert.isFunction module.Test::passes
 
     # Test assertion methods – loop used for brevity
-    for assertionMethod in assertionMethods
+    for assertionMethod in typeAssertionMethods
       do (assertionMethod) ->
         test "should have a prototype `#{assertionMethod}` method", ->
           assert.isFunction module.Test::[assertionMethod]
@@ -134,20 +134,24 @@ suite 'pledge module', ->
       test '`passes` method should return `true`', ->
         assert.isTrue instance.passes()
 
-      suite 'assertion methods', ->
+      # Test assertion methods – loop used for brevity
+      for assertionMethod in typeAssertionMethods
+        do (assertionMethod) ->
 
-        setup ->
-          sinon.spy instance, 'assert'
+          suite "#{assertionMethod} method", ->
 
-        teardown ->
-          instance.assert.restore()
-
-        # Test assertion methods – loop used for brevity
-        for assertionMethod in assertionMethods
-          do (assertionMethod) ->
-            test "`#{assertionMethod}` method should call the `assert` method", ->
+            setup ->
+              sinon.spy instance, 'assert'
               instance[assertionMethod]()
-              instance.assert.called
+
+            teardown ->
+              instance.assert.restore()
+
+            test 'should call the `assert` method', ->
+              assert.isTrue instance.assert.called
+
+            test 'should call the `assert` method with the type utility function matching this method', ->
+              assert.isTrue instance.assert.calledWith(module.util.type[assertionMethod])
 
     suite 'instance with a subject specified', ->
       instance = null

@@ -189,7 +189,8 @@ class exports.Test
 
   # Mix in type-checking utilities
   for own name, fn of exports.util.type
-    @::[name] = -> @assert fn
+    do (name, fn) =>
+      @::[name] = -> @assert fn
 
   #>
   # Check whether the assertion passes.
