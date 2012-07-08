@@ -1,6 +1,9 @@
 
 # Pledge #
 
+**Note: Pledge is currently under heavy development, you
+probably shouldn't use it quite yet :)**
+
 Pledge is a pretty little validation library for your browser
 and server. It has a simple and expressive syntax which makes
 validating variables and arguments an enjoyable task!
