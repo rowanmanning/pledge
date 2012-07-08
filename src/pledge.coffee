@@ -1,5 +1,64 @@
 
 #>
+# Utilities
+# =========
+#
+exports.util =
+
+  #>
+  # Type casting
+  # ------------
+  #
+  cast:
+
+    #>
+    # Convert an object to a string
+    # @function pledge.util.cast.toString
+    # @argument+ {mixed} obj
+    # @return {String}
+    #
+    toString: (obj) ->
+      Object.prototype.toString.call obj
+
+  #>
+  # Type checking
+  # ------------
+  #
+  type:
+    isArray: Array.isArray || (obj) ->
+      exports.util.cast.toString(obj) is '[object Array]'
+    isBoolean: (obj) ->
+      typeof obj is 'boolean'
+    isFunction: (obj) ->
+      exports.util.cast.toString(obj) is '[object Function]'
+    isNull: (obj) ->
+      obj is null
+    isNumber: (obj) ->
+      typeof obj is 'number'
+    isObject: (obj) ->
+      obj is Object(obj)
+    isString: (obj) ->
+      typeof obj is 'string'
+    isUndefined: (obj) ->
+      typeof obj is 'undefined'
+    isNotArray: (obj) ->
+      not exports.util.type.isArray obj
+    isNotBoolean: (obj) ->
+      not exports.util.type.isBoolean obj
+    isNotFunction: (obj) ->
+      not exports.util.type.isFunction obj
+    isNotNull: (obj) ->
+      not exports.util.type.isNull obj
+    isNotNumber: (obj) ->
+      not exports.util.type.isNumber obj
+    isNotObject: (obj) ->
+      not exports.util.type.isObject obj
+    isNotString: (obj) ->
+      not exports.util.type.isString obj
+    isDefined: (obj) ->
+      not exports.util.type.isUndefined obj
+
+#>
 # Test class
 # ==========
 #
@@ -64,6 +123,10 @@ class exports.Test
     @_results.push pass
     pass
 
+  # Mix in type-checking utilities
+  for own name, fn of exports.util.type
+    @::[name] = -> @assert fn
+
   #>
   # Check whether the assertion passes.
   # @method pledge.Test::passes
@@ -76,7 +139,6 @@ class exports.Test
       false not in @_results
     else
       true in @_results
-
 
 #>
 # Test Chain class

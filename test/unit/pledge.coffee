@@ -3,6 +3,26 @@
 {assert} = require 'chai'
 sinon = require 'sinon'
 
+# Assertion methods
+assertionMethods = [
+  'isArray'
+  'isBoolean'
+  'isFunction'
+  'isNull'
+  'isNumber'
+  'isObject'
+  'isString'
+  'isUndefined'
+  'isNotArray'
+  'isNotBoolean'
+  'isNotFunction'
+  'isNotNull'
+  'isNotNumber'
+  'isNotObject'
+  'isNotString'
+  'isDefined'
+]
+
 # Tests
 suite 'pledge module', ->
   module = require '../../src/pledge'
@@ -10,10 +30,10 @@ suite 'pledge module', ->
   test 'should be an object', ->
     assert.isObject module
 
-  test 'should have an `Test` property', ->
+  test 'should have a `Test` property', ->
     assert.isDefined module.Test
 
-  test 'should have an `TestChain` property', ->
+  test 'should have a `TestChain` property', ->
     assert.isDefined module.TestChain
 
   test 'should have a `pledge` property', ->
@@ -44,6 +64,12 @@ suite 'pledge module', ->
 
     test 'should have a prototype `passes` method', ->
       assert.isFunction module.Test::passes
+
+    # Test assertion methods – loop used for brevity
+    for assertionMethod in assertionMethods
+      do (assertionMethod) ->
+        test "should have a prototype `#{assertionMethod}` method", ->
+          assert.isFunction module.Test::[assertionMethod]
 
     test 'should throw when called without the `new` keyword', ->
       assert.throws -> module.Test()
@@ -108,27 +134,39 @@ suite 'pledge module', ->
       test '`passes` method should return `true`', ->
         assert.isTrue instance.passes()
 
-    suite 'instance with subject \'foo\'', ->
+      suite 'assertion methods', ->
+
+        setup ->
+          sinon.spy instance, 'assert'
+
+        teardown ->
+          instance.assert.restore()
+
+        # Test assertion methods – loop used for brevity
+        for assertionMethod in assertionMethods
+          do (assertionMethod) ->
+            test "`#{assertionMethod}` method should call the `assert` method", ->
+              instance[assertionMethod]()
+              instance.assert.called
+
+    suite 'instance with a subject specified', ->
       instance = null
-      assertionFn = null
+      assertionFunction = null
 
       setup ->
         instance = new module.Test 'foo'
-        assertionFn = sinon.spy()
+        assertionFunction = sinon.spy()
 
       teardown ->
         instance = null
-        assertionFn = null
-
-      test '`getSubject` method should return a string', ->
-        assert.isString instance.getSubject()
+        assertionFunction = null
 
       test '`getSubject` method should return the value passed into the constructor', ->
         assert.strictEqual instance.getSubject(), 'foo'
 
       test '`assert` method should call the passed in function with the test subject as a first argument', ->
-        instance.assert(assertionFn)
-        assert.isTrue assertionFn.calledWith('foo')
+        instance.assert(assertionFunction)
+        assert.isTrue assertionFunction.calledWith('foo')
 
     suite 'instance with logic mode set to `Test.LOGIC_MODE_AND`', ->
       instance = null
