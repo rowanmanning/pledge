@@ -6,8 +6,9 @@ colors = require 'colors'
 # Paths
 paths =
   config: './config'
-  nodebin: './node_modules/.bin'
   functionalTest: './test/functional'
+  lib: './lib'
+  nodebin: './node_modules/.bin'
   src: './src'
   unitTest: './test/unit'
 
@@ -15,7 +16,7 @@ paths =
 desc 'This builds JavaScript from the CoffeeScript source'
 task 'build', ['lint', 'test', 'functional'], ->
   console.log 'Building JavaScript:'.cyan
-  exec "#{paths.nodebin}/coffee -o ./lib ./src", (error, stdout, stderr) ->
+  exec "#{paths.nodebin}/coffee -o #{paths.lib} #{paths.src}", (error, stdout, stderr) ->
     if error is null
       console.log 'Built!'.green
     else
