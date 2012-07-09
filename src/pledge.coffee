@@ -1,9 +1,12 @@
 
+# Set up namespace
+ns = {}
+
 #>
 # Utilities
 # =========
 #
-exports.util =
+ns.util =
 
   #>
   # Type casting
@@ -30,7 +33,7 @@ exports.util =
     # Check whether an object is an array.
     #
     isArray: Array.isArray || (obj) ->
-      exports.util.cast.toString(obj) is '[object Array]'
+      ns.util.cast.toString(obj) is '[object Array]'
     
     #>
     # Check whether an object is a boolean.
@@ -42,7 +45,7 @@ exports.util =
     # Check whether an object is a function.
     #
     isFunction: (obj) ->
-      exports.util.cast.toString(obj) is '[object Function]'
+      ns.util.cast.toString(obj) is '[object Function]'
     
     #>
     # Check whether an object is null.
@@ -78,49 +81,49 @@ exports.util =
     # Check whether an object is a non-array.
     #
     isNotArray: (obj) ->
-      not exports.util.type.isArray obj
+      not ns.util.type.isArray obj
     
     #>
     # Check whether an object is a non-boolean.
     #
     isNotBoolean: (obj) ->
-      not exports.util.type.isBoolean obj
+      not ns.util.type.isBoolean obj
     
     #>
     # Check whether an object is a non-function.
     #
     isNotFunction: (obj) ->
-      not exports.util.type.isFunction obj
+      not ns.util.type.isFunction obj
     
     #>
     # Check whether an object is non-null.
     #
     isNotNull: (obj) ->
-      not exports.util.type.isNull obj
+      not ns.util.type.isNull obj
     
     #>
     # Check whether an object is a non-number.
     #
     isNotNumber: (obj) ->
-      not exports.util.type.isNumber obj
+      not ns.util.type.isNumber obj
     
     #>
     # Check whether an object is a non-object.
     #
     isNotObject: (obj) ->
-      not exports.util.type.isObject obj
+      not ns.util.type.isObject obj
     
     #>
     # Check whether an object is a non-string.
     #
     isNotString: (obj) ->
-      not exports.util.type.isString obj
+      not ns.util.type.isString obj
     
     #>
     # Check whether an object is defined.
     #
     isDefined: (obj) ->
-      not exports.util.type.isUndefined obj
+      not ns.util.type.isUndefined obj
 
   #>
   # Instance checking
@@ -140,7 +143,7 @@ exports.util =
     # Check whether an object is not an instance of a prototypal class.
     #
     isNotInstanceOf: (obj, proto) ->
-      not exports.util.instance.isInstanceOf obj, proto
+      not ns.util.instance.isInstanceOf obj, proto
 
 #>
 # Test class
@@ -149,7 +152,7 @@ exports.util =
 # Represents a pledge test.
 # @class pledge.Test
 #
-class exports.Test
+class ns.Test
 
   # Test logic mode constants
   @LOGIC_MODE_AND = 'and'
@@ -210,16 +213,16 @@ class exports.Test
     pass
 
   # Mix in type-checking utilities
-  for own name, fn of exports.util.type
+  for own name, fn of ns.util.type
     do (name) =>
       @::[name] = ->
-        @assert exports.util.type[name]
+        @assert ns.util.type[name]
 
   # Mix in instance checking utilities
-  for own name, fn of exports.util.instance
+  for own name, fn of ns.util.instance
     do (name) =>
       @::[name] = (proto) ->
-        @assert exports.util.instance[name], proto
+        @assert ns.util.instance[name], proto
 
   #>
   # Check whether the assertion passes.
@@ -241,7 +244,7 @@ class exports.Test
 # A convenience wrapper for `Test`.
 # @class pledge.TestChain
 #
-class exports.TestChain extends exports.Test
+class ns.TestChain extends ns.Test
 
   #>
   # Class constructor.
@@ -258,7 +261,7 @@ class exports.TestChain extends exports.Test
   # @return {pledge.TestChain}
   #
   all: ->
-    @setLogicMode exports.Test.LOGIC_MODE_AND
+    @setLogicMode ns.Test.LOGIC_MODE_AND
     this
 
   #>
@@ -267,7 +270,7 @@ class exports.TestChain extends exports.Test
   # @return {pledge.TestChain}
   #
   either: ->
-    @setLogicMode exports.Test.LOGIC_MODE_OR
+    @setLogicMode ns.Test.LOGIC_MODE_OR
     this
 
   #>
@@ -302,7 +305,22 @@ class exports.TestChain extends exports.Test
 #
 # Shortcut constructor for `TestChain`.
 #
-exports.pledge = (subject) ->
-  if this instanceof exports.pledge
+ns.pledge = (subject) ->
+  if this instanceof ns.pledge
     throw new Error 'Bad method call, unexpected `new`'
-  new exports.TestChain subject
+  new ns.TestChain subject
+
+
+# Exports for browser
+if not module? and typeof window isnt 'undefined'
+
+  # Expose `pledge` on the window object
+  window.pledge = ns.pledge
+
+  # Expose `util` as a property of `pledge` so as
+  # not to pollute the global namespace
+  window.pledge.util = ns.util
+
+# Exports for Node
+else
+  module.exports = ns
