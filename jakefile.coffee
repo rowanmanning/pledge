@@ -13,31 +13,58 @@ paths =
 
 # Build JavaScript
 desc 'This builds JavaScript from the CoffeeScript source'
-task 'build', ->
+task 'build', ['lint', 'test', 'functional'], ->
   console.log 'Building JavaScript:'.cyan
   exec "#{paths.nodebin}/coffee -o ./lib ./src", (error, stdout, stderr) ->
-    console.log (if error is null then stdout else stderr)
+    if error is null
+      console.log 'Built!'.green
+    else
+      console.log stderr
+      process.exit()
+    complete()
+, async: true
 
 # Run CoffeeLint
 desc 'This runs CoffeeLint on the CoffeeScript source'
 task 'lint', ->
   console.log 'Linting:'.cyan
   exec getLintCommand(), (error, stdout, stderr) ->
-    console.log (if stderr is '' then stdout else stderr)
+    if stderr is ''
+      console.log stdout
+    else
+      console.log stderr
+      process.exit()
+    complete()
+, async: true
 
 # Run unit tests
 desc 'This runs all unit tests'
 task 'test', ->
   console.log 'Running unit tests:'.cyan
   exec getTestCommand(), (error, stdout, stderr) ->
-    console.log (if error is null then stdout else stderr)
+    if error is null
+      console.log stdout
+    else
+      console.log stderr
+      process.exit()
+    complete()
+, async: true
 
 # Run functional tests
 desc 'This runs all functional tests'
 task 'functional', ->
   console.log 'Running functional tests:'.cyan
   exec getTestCommand(dir: paths.functionalTest), (error, stdout, stderr) ->
-    console.log (if error is null then stdout else stderr)
+    if error is null
+      console.log stdout
+    else
+      console.log stderr
+      process.exit()
+    complete()
+, async: true
+
+# Default task
+task 'default', ['build']
 
 # Generate a lint command
 getLintCommand = (options = {}) ->
