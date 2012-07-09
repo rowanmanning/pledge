@@ -29,6 +29,14 @@ suite 'Pass checking', ->
     test 'should return `true`', ->
       assert.isTrue pledge(123).either().isString().isNumber().passes()
 
+  suite "pledge(new Date()).isInstanceOf(Date).passes()", ->
+    test 'should return `true`', ->
+      assert.isTrue pledge(new Date()).isInstanceOf(Date).passes()
+
+  suite "pledge(new Error()).isInstanceOf(Date).passes()", ->
+    test 'should return `false`', ->
+      assert.isFalse pledge(new Error()).isInstanceOf(Date).passes()
+
 suite 'Error checking', ->
 
   suite "pledge('foo').isString().otherwise.error('oops')", ->

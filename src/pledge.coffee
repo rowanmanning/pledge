@@ -122,6 +122,26 @@ exports.util =
     isDefined: (obj) ->
       not exports.util.type.isUndefined obj
 
+  #>
+  # Instance checking
+  # ------------
+  #
+  instance:
+
+    #>
+    # Check whether an object is a instance of a prototypal class.
+    #
+    isInstanceOf: (obj, proto) ->
+      if typeof proto isnt 'function'
+        return false
+      obj instanceof proto
+
+    #>
+    # Check whether an object is not an instance of a prototypal class.
+    #
+    isNotInstanceOf: (obj, proto) ->
+      not exports.util.instance.isInstanceOf obj, proto
+
 #>
 # Test class
 # ==========
@@ -177,20 +197,29 @@ class exports.Test
   # Assert that a function will return true when called with the test subject.
   # @method pledge.Test::assert
   # @argument+ {Function} fn
+  # @argument+ {mixed} args...
   # @return {Boolean}
   #
-  assert: (fn) ->
+  assert: (fn, args...) ->
     if typeof fn isnt 'function'
       throw new Error 'Invalid fn argument, function expected'
-    result = fn @getSubject()
+    args.unshift @getSubject()
+    result = fn.apply this, args
     pass = if typeof result is 'boolean' then result else false
     @_results.push pass
     pass
 
   # Mix in type-checking utilities
   for own name, fn of exports.util.type
-    do (name, fn) =>
-      @::[name] = -> @assert fn
+    do (name) =>
+      @::[name] = ->
+        @assert exports.util.type[name]
+
+  # Mix in instance checking utilities
+  for own name, fn of exports.util.instance
+    do (name) =>
+      @::[name] = (proto) ->
+        @assert exports.util.instance[name], proto
 
   #>
   # Check whether the assertion passes.
@@ -247,8 +276,8 @@ class exports.TestChain extends exports.Test
   # @return {pledge.TestChain}
   # @see pledge.Test::assert
   #
-  assert: (fn) ->
-    super fn
+  assert: () ->
+    super
     this
 
   #>

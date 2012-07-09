@@ -141,10 +141,61 @@ suite 'pledge module utilities', ->
             assert.doesNotThrow -> type[functionName] ->
             assert.doesNotThrow -> type[functionName] new Date()
 
-          test "should return true when called with #{testData.name} argument", ->
+          test "should return `true` when called with #{testData.name} argument", ->
             for obj in testData.yes
               assert.isTrue type[functionName](obj)
 
-          test "should return false when called with non-#{testData.name} argument", ->
+          test "should return `false` when called with non-#{testData.name} argument", ->
             for obj in testData.no
               assert.isFalse type[functionName](obj)
+
+  test 'should have an `instance` property', ->
+    assert.isDefined module.util.instance
+
+  suite '`instance` property', ->
+    instance = module.util.instance
+
+    test 'should be an object', ->
+      assert.isObject instance
+
+    test 'should have a `isInstanceOf` function', ->
+      assert.isFunction instance.isInstanceOf
+
+    suite '`isInstanceOf` function', ->
+      isInstanceOf = instance.isInstanceOf
+
+      test 'should not throw regardless of arguments', ->
+        assert.doesNotThrow -> isInstanceOf 'foo', 'bar'
+        assert.doesNotThrow -> isInstanceOf 123, Date
+        assert.doesNotThrow -> isInstanceOf {}, Object
+
+      test 'should return `true` when the first argument is an instance of the second argument', ->
+        assert.isTrue isInstanceOf(new Error(), Error)
+        assert.isTrue isInstanceOf(new Date(), Date)
+        assert.isTrue isInstanceOf(new module.Test(), module.Test)
+
+      test 'should return `false` when the first argument is not instance of the second argument', ->
+        assert.isFalse isInstanceOf(new Error(), Date)
+        assert.isFalse isInstanceOf(new Date(), module.Test)
+        assert.isFalse isInstanceOf(new module.Test(), Error)
+
+    test 'should have a `isNotInstanceOf` function', ->
+      assert.isFunction instance.isNotInstanceOf
+
+    suite '`isNotInstanceOf` function', ->
+      isNotInstanceOf = instance.isNotInstanceOf
+
+      test 'should not throw regardless of arguments', ->
+        assert.doesNotThrow -> isNotInstanceOf 'foo', 'bar'
+        assert.doesNotThrow -> isNotInstanceOf 123, Date
+        assert.doesNotThrow -> isNotInstanceOf {}, Object
+
+      test 'should return `true` when the first argument is not instance of the second argument', ->
+        assert.isTrue isNotInstanceOf(new Error(), Date)
+        assert.isTrue isNotInstanceOf(new Date(), module.Test)
+        assert.isTrue isNotInstanceOf(new module.Test(), Error)
+
+      test 'should return `false` when the first argument is an instance of the second argument', ->
+        assert.isFalse isNotInstanceOf(new Error(), Error)
+        assert.isFalse isNotInstanceOf(new Date(), Date)
+        assert.isFalse isNotInstanceOf(new module.Test(), module.Test)

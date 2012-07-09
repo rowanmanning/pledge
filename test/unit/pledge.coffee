@@ -3,7 +3,7 @@
 {assert} = require 'chai'
 sinon = require 'sinon'
 
-# Type assertion methods
+# Assertion methods
 typeAssertionMethods = [
   'isArray'
   'isBoolean'
@@ -21,6 +21,10 @@ typeAssertionMethods = [
   'isNotObject'
   'isNotString'
   'isDefined'
+]
+instanceAssertionMethods = [
+  'isInstanceOf'
+  'isNotInstanceOf'
 ]
 
 # Tests
@@ -66,10 +70,16 @@ suite 'pledge module', ->
       assert.isFunction module.Test::passes
 
     # Test assertion methods – loop used for brevity
-    for assertionMethod in typeAssertionMethods
-      do (assertionMethod) ->
-        test "should have a prototype `#{assertionMethod}` method", ->
-          assert.isFunction module.Test::[assertionMethod]
+    for typeAssertionMethod in typeAssertionMethods
+      do (typeAssertionMethod) ->
+        test "should have a prototype `#{typeAssertionMethod}` method", ->
+          assert.isFunction module.Test::[typeAssertionMethod]
+
+    # Test assertion methods – loop used for brevity
+    for instanceAssertionMethod in instanceAssertionMethods
+      do (instanceAssertionMethod) ->
+        test "should have a prototype `#{instanceAssertionMethod}` method", ->
+          assert.isFunction module.Test::[instanceAssertionMethod]
 
     test 'should throw when called without the `new` keyword', ->
       assert.throws -> module.Test()
@@ -134,24 +144,32 @@ suite 'pledge module', ->
       test '`passes` method should return `true`', ->
         assert.isTrue instance.passes()
 
-      # Test assertion methods – loop used for brevity
-      for assertionMethod in typeAssertionMethods
-        do (assertionMethod) ->
+      # Test type assertion methods – loop used for brevity
+      for typeAssertionMethod in typeAssertionMethods
+        do (typeAssertionMethod) ->
 
-          suite "#{assertionMethod} method", ->
+          suite "#{typeAssertionMethod} method", ->
 
             setup ->
               sinon.spy instance, 'assert'
-              instance[assertionMethod]()
+              sinon.spy module.util.type, typeAssertionMethod
+              instance[typeAssertionMethod]()
 
             teardown ->
               instance.assert.restore()
+              module.util.type[typeAssertionMethod].restore()
 
             test 'should call the `assert` method', ->
               assert.isTrue instance.assert.called
 
-            test 'should call the `assert` method with the type utility function matching this method', ->
-              assert.isTrue instance.assert.calledWith(module.util.type[assertionMethod])
+            test 'should call the `assert` method with the type utility function matching this method as a first argument', ->
+              assert.isTrue instance.assert.calledWith(module.util.type[typeAssertionMethod])
+
+            test 'should call the type utility function matching this method', ->
+              assert.isTrue module.util.type[typeAssertionMethod].called
+
+            test 'should call the type utility function matching this method with the instance subject as a first argument', ->
+              assert.isTrue module.util.type[typeAssertionMethod].calledWith(instance.getSubject())
 
     suite 'instance with a subject specified', ->
       instance = null
@@ -171,6 +189,40 @@ suite 'pledge module', ->
       test '`assert` method should call the passed in function with the test subject as a first argument', ->
         instance.assert(assertionFunction)
         assert.isTrue assertionFunction.calledWith('foo')
+
+      test '`assert` method should call the passed in function with any extra arguments passed into it', ->
+        instance.assert(assertionFunction, 'bar', 'baz')
+        assert.isTrue assertionFunction.calledWith('foo', 'bar', 'baz')
+
+      # Test instance assertion methods – loop used for brevity
+      for instanceAssertionMethod in instanceAssertionMethods
+        do (instanceAssertionMethod) ->
+
+          suite "#{instanceAssertionMethod} method", ->
+
+            setup ->
+              sinon.spy instance, 'assert'
+              sinon.spy module.util.instance, instanceAssertionMethod
+              instance[instanceAssertionMethod]('bar')
+
+            teardown ->
+              instance.assert.restore()
+              module.util.instance[instanceAssertionMethod].restore()
+
+            test 'should call the `assert` method', ->
+              assert.isTrue instance.assert.called
+
+            test 'should call the `assert` method with the instance utility function matching this method as a first argument', ->
+              assert.isTrue instance.assert.calledWith(module.util.instance[instanceAssertionMethod])
+
+            test 'should call the instance utility function matching this method', ->
+              assert.isTrue module.util.instance[instanceAssertionMethod].called
+
+            test 'should call the instance utility function matching this method with the instance subject as a first argument', ->
+              assert.isTrue module.util.instance[instanceAssertionMethod].calledWith(instance.getSubject())
+
+            test 'should call the instance utility function matching this method with the first argument of this call as a second argument', ->
+              assert.isTrue module.util.instance[instanceAssertionMethod].calledWith(instance.getSubject(), 'bar')
 
     suite 'instance with logic mode set to `Test.LOGIC_MODE_AND`', ->
       instance = null
@@ -365,6 +417,26 @@ suite 'pledge module', ->
 
       test '`assert` method should be chainable', ->
         assert.strictEqual instance.assert(-> true), instance
+
+    suite 'instance with a subject specified', ->
+      instance = null
+      assertionFunction = null
+
+      setup ->
+        instance = new module.TestChain 'foo'
+        assertionFunction = sinon.spy()
+
+      teardown ->
+        instance = null
+        assertionFunction = null
+
+      test '`assert` method should call the passed in function with the test subject as a first argument', ->
+        instance.assert(assertionFunction)
+        assert.isTrue assertionFunction.calledWith('foo')
+
+      test '`assert` method should call the passed in function with any extra arguments passed into it', ->
+        instance.assert(assertionFunction, 'bar', 'baz')
+        assert.isTrue assertionFunction.calledWith('foo', 'bar', 'baz')
 
     suite 'instance with `all` called', ->
       instance = null
