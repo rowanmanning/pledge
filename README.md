@@ -43,6 +43,8 @@ following commands:
 
 `jake functional`: Run all functional tests.
 
+`jake lint`: Lint all CoffeeScript source with CoffeeLint.
+
 `jake test`: Run all unit tests.
 
 
