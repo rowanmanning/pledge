@@ -6,6 +6,7 @@ colors = require 'colors'
 # Paths
 paths =
   config: './config'
+  dist: './dist'
   functionalTest: './test/functional'
   lib: './lib'
   nodebin: './node_modules/.bin'
@@ -23,6 +24,25 @@ task 'build', ['lint', 'test', 'functional'], ->
       console.log stderr
       process.exit()
     complete()
+, async: true
+
+# Build Distribution JavaScript
+desc 'This builds distribution JavaScript from the JavaScript source'
+task 'dist', ['build'], ->
+  console.log 'Building distribution JavaScript:'.cyan
+  exec "mkdir -p #{paths.dist} && cp #{paths.lib}/pledge.js #{paths.dist}/", (error, stdout, stderr) ->
+    if error is null
+      console.log 'Unminified version built!'.green
+      exec "#{paths.nodebin}/uglifyjs -o #{paths.dist}/pledge.min.js #{paths.dist}/pledge.js", (error, stdout, stderr) ->
+      if error is null
+        console.log 'Minified version built!'.green
+      else
+        console.log stderr
+        process.exit()
+      complete()
+    else
+      console.log stderr
+      process.exit()
 , async: true
 
 # Run CoffeeLint

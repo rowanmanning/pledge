@@ -1,3 +1,9 @@
+###
+Pledge - v0.2.0
+
+Copyright 2012, Rowan Manning
+Dual licensed under the MIT or GPL Version 2 licenses.
+###
 
 # Set up namespace
 ns = {}

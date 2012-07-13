@@ -41,6 +41,8 @@ following commands:
 
 `jake build`: Build JavaScript from the CoffeeScript source.
 
+`jake dist`: Build browser JavaScript from the built JavaScript.
+
 `jake functional`: Run all functional tests.
 
 `jake lint`: Lint all CoffeeScript source with CoffeeLint.

@@ -26,7 +26,8 @@
         "coffeelint": "0.4.x",
         "colors": "0.6.0-1",
         "mocha": "1.2.x",
-        "sinon": "1.3.x"
+        "sinon": "1.3.x",
+        "uglify-js": "1.3.x"
     },
 
     "main": "./lib/pledge",
