@@ -12,7 +12,9 @@ validating variables and arguments an enjoyable task!
 ## Installation ##
 
 **Browser**  
-Todo...
+To use pledge in your browser, copy/link to `dist/pledge.js` or
+`dist/pledge.min.js` and start using. Pledge will work fine if
+you use a dependency manager like [Browserify][browserify] too.
 
 **Server (Node.js):**  
 Just install with `npm install pledge` or add it to your
@@ -56,6 +58,7 @@ Dual licensed under the [MIT][mit] or [GPL Version 2][gpl]
 licenses.
 
 
+[browserify]: http://github.com/substack/node-browserify
 [jake]: http://github.com/mde/jake
 [mit]: http://opensource.org/licenses/mit-license.php
 [gpl]: http://opensource.org/licenses/gpl-2.0.php
