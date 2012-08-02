@@ -5,6 +5,8 @@ Pledge is a pretty little argument validation library for your
 browser and server. It has a simple and expressive syntax which
 makes validating variables and arguments an enjoyable task!
 
+[![Build Status][travis-status]][travis]
+
 
 ## Installation ##
 
@@ -175,6 +177,7 @@ licenses.
 
 
 [browserify]: http://github.com/substack/node-browserify
-[jake]: http://github.com/mde/jake
-[mit]: http://opensource.org/licenses/mit-license.php
 [gpl]: http://opensource.org/licenses/gpl-2.0.php
+[mit]: http://opensource.org/licenses/mit-license.php
+[travis]: https://secure.travis-ci.org/rowanmanning/pledge.png?branch=master
+[travis-status]: https://secure.travis-ci.org/rowanmanning/pledge.png?branch=master
