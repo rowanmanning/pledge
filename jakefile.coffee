@@ -84,13 +84,17 @@ task 'functional', ->
     complete()
 , async: true
 
+# CI
+desc 'This runs all tasks required for CI'
+task 'ci', ['lint', 'test']
+
 # Default task
 task 'default', ['build']
 
 # Generate a lint command
 getLintCommand = (options = {}) ->
   options.configFile ?= "#{paths.config}/coffeelint.json"
-  "#{paths.nodebin}/coffeelint -f #{options.configFile} {#{paths.src},#{paths.unitTest},#{paths.functionalTest}}/**";
+  "#{paths.nodebin}/coffeelint -f #{options.configFile} #{paths.src}/** #{paths.unitTest}/** #{paths.functionalTest}/**";
 
 # Generate a test command
 getTestCommand = (options = {}) ->
