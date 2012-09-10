@@ -186,5 +186,5 @@ licenses.
 [browserify]: http://github.com/substack/node-browserify
 [gpl]: http://opensource.org/licenses/gpl-2.0.php
 [mit]: http://opensource.org/licenses/mit-license.php
-[travis]: https://secure.travis-ci.org/rowanmanning/pledge.png?branch=master
+[travis]: http://secure.travis-ci.org/rowanmanning/pledge
 [travis-status]: https://secure.travis-ci.org/rowanmanning/pledge.png?branch=master
