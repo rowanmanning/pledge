@@ -169,7 +169,7 @@ following commands:
 
 `jake dist`: Build browser JavaScript from the built JavaScript.
 
-`jake functional`: Run all functional tests.
+`jake integration`: Run all integration tests.
 
 `jake lint`: Lint all CoffeeScript source with CoffeeLint.
 
