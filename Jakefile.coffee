@@ -8,7 +8,7 @@ path = require 'path'
 paths =
   config: './test/config'
   dist: './dist'
-  functionalTest: './test/functional'
+  integrationTest: './test/integration'
   lib: './lib'
   nodebin: './node_modules/.bin'
   src: './src'
@@ -16,7 +16,7 @@ paths =
 
 # Build JavaScript
 desc 'This builds JavaScript from the CoffeeScript source'
-task 'build', ['lint', 'test', 'functional'], ->
+task 'build', ['lint', 'test', 'integration'], ->
   console.log 'Building JavaScript:'.cyan
   exec "#{paths.nodebin}/coffee -o #{paths.lib} #{paths.src}", (error, stdout, stderr) ->
     if error is null
@@ -76,15 +76,15 @@ task 'test', (filePath) ->
     complete()
 , async: true
 
-# Run functional tests
-desc 'This runs all functional tests'
-task 'functional', (filePath) ->
+# Run integration tests
+desc 'This runs all integration tests'
+task 'integration', (filePath) ->
   if filePath?
-    filePath = path.join paths.functionalTest, filePath
-    console.log "Running functional tests for #{filePath}:".cyan
+    filePath = path.join paths.integrationTest, filePath
+    console.log "Running integration tests for #{filePath}:".cyan
   else
-    filePath = paths.functionalTest
-    console.log 'Running functional tests:'.cyan
+    filePath = paths.integrationTest
+    console.log 'Running integration tests:'.cyan
   exec getTestCommand(path: filePath), (error, stdout, stderr) ->
     if error is null
       console.log stdout
@@ -96,7 +96,7 @@ task 'functional', (filePath) ->
 
 # CI
 desc 'This runs all tasks required for CI'
-task 'ci', ['lint', 'test', 'functional']
+task 'ci', ['lint', 'test', 'integration']
 
 # Default task
 task 'default', ['build']
@@ -104,7 +104,7 @@ task 'default', ['build']
 # Generate a lint command
 getLintCommand = (options = {}) ->
   options.configFile ?= "#{paths.config}/coffeelint.json"
-  "#{paths.nodebin}/coffeelint -rf #{options.configFile} #{paths.src} #{paths.unitTest} #{paths.functionalTest}"
+  "#{paths.nodebin}/coffeelint -rf #{options.configFile} #{paths.src} #{paths.unitTest} #{paths.integrationTest}"
 
 # Generate a test command
 getTestCommand = (options = {}) ->
