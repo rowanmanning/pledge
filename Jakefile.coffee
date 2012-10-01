@@ -2,6 +2,7 @@
 # Dependencies
 colors = require 'colors'
 {exec} = require 'child_process'
+path = require 'path'
 
 # Paths
 paths =
@@ -60,33 +61,42 @@ task 'lint', ->
 
 # Run unit tests
 desc 'This runs all unit tests'
-task 'test', ->
-  console.log 'Running unit tests:'.cyan
-  exec getTestCommand(), (error, stdout, stderr) ->
+task 'test', (filePath) ->
+  if filePath?
+    filePath = path.join paths.unitTest, filePath
+    console.log "Running unit tests for #{filePath}:".cyan
+  else
+    console.log 'Running unit tests:'.cyan
+  exec getTestCommand(path: filePath), (error, stdout, stderr) ->
     if error is null
       console.log stdout
     else
       console.log stderr
-      process.exit()
+      fail()
     complete()
 , async: true
 
 # Run functional tests
 desc 'This runs all functional tests'
-task 'functional', ->
-  console.log 'Running functional tests:'.cyan
-  exec getTestCommand(dir: paths.functionalTest), (error, stdout, stderr) ->
+task 'functional', (filePath) ->
+  if filePath?
+    filePath = path.join paths.functionalTest, filePath
+    console.log "Running functional tests for #{filePath}:".cyan
+  else
+    filePath = paths.functionalTest
+    console.log 'Running functional tests:'.cyan
+  exec getTestCommand(path: filePath), (error, stdout, stderr) ->
     if error is null
       console.log stdout
     else
       console.log stderr
-      process.exit()
+      fail()
     complete()
 , async: true
 
 # CI
 desc 'This runs all tasks required for CI'
-task 'ci', ['lint', 'test']
+task 'ci', ['lint', 'test', 'functional']
 
 # Default task
 task 'default', ['build']
@@ -100,5 +110,5 @@ getLintCommand = (options = {}) ->
 getTestCommand = (options = {}) ->
   options.ui ?= 'tdd'
   options.reporter ?= 'spec'
-  options.dir ?= paths.unitTest
-  "#{paths.nodebin}/mocha --compilers coffee:coffee-script --ui #{options.ui} --reporter #{options.reporter} --colors #{options.dir}/**";
+  options.path ?= paths.unitTest
+  "#{paths.nodebin}/mocha --compilers coffee:coffee-script --ui #{options.ui} --reporter #{options.reporter} --colors --recursive #{options.path}"
