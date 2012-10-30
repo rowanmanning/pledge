@@ -187,4 +187,4 @@ licenses.
 [gpl]: http://opensource.org/licenses/gpl-2.0.php
 [mit]: http://opensource.org/licenses/mit-license.php
 [travis]: http://secure.travis-ci.org/rowanmanning/pledge
-[travis-status]: https://secure.travis-ci.org/rowanmanning/pledge.png?branch=master
+[travis-status]: https://secure.travis-ci.org/rowanmanning/pledge.png?branch=0.2.x
