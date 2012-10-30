@@ -3,6 +3,11 @@
 
 // Dependencies
 var colors = require('colors');
+var exec = require('child_process').exec;
+
+
+// Config
+var nodebin = 'node ./node_modules/.bin';
 
 
 // Utils/aliases
@@ -15,15 +20,31 @@ log.task = function (msg) {
 // Run jshint on the source code
 function lint () {
     log.task('Lint');
-    log();
-    complete();
+    exec(nodebin + '/jshint --config ./test/config/jshint.json ./test ./lib', function (err, stdout, stderr) {
+        if (err !== null) {
+            log(stdout);
+            fail()
+        } else {
+            log('No errors'.green);
+        }
+        log('');
+        complete();
+    });
 }
 
 // Run unit tests
 function test () {
     log.task('Test');
-    log();
-    complete();
+    exec(nodebin + '/mocha --ui tdd --reporter spec --colors --recursive ./test/unit', function (err, stdout, stderr) {
+        if (err !== null) {
+            log(stderr);
+            fail()
+        } else {
+            log(stdout);
+        }
+        log('');
+        complete();
+    });
 }
 
 
