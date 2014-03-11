@@ -5,6 +5,8 @@ Pledge is a pretty little argument validation library for your
 browser and server. It has a simple and expressive syntax which
 makes validating variables and arguments an enjoyable task!
 
+**NOTE: This project is no longer being maintained. If you're interested in taking over maintenance of this repo, please contact me.**
+
 [![Build Status][travis-status]][travis]
 
 
